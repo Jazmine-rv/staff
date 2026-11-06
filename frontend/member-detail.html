@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Manager — Ficha de miembro</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-dot"></span><strong>Staff Manager</strong></div>
+    <nav class="nav">
+      <a class="nav-link" href="./dashboard.html">Dashboard</a>
+      <a class="nav-link" href="./members.html">Miembros actuales</a>
+      <a class="nav-link" href="./inactive.html">Inactivos</a>
+      <a class="nav-link" href="./history.html">Historial</a>
+    </nav>
+    <div class="sidebar-footer muted">v0.1 · panel privado</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <a href="./members.html" class="back-link">← Volver</a>
+        <h1>Ficha de miembro</h1>
+      </div>
+      <div class="topbar-right">
+        <span id="whoami" class="muted">…</span>
+        <span class="role-pill" id="staff-role">…</span>
+        <button id="theme-toggle" type="button" class="ghost-btn">🌙 Oscuro</button>
+        <button id="logout-btn" type="button" class="ghost-btn">Salir</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <p id="detail-error" class="error" role="alert" hidden></p>
+      <p id="detail-ok" class="ok" role="status" hidden>Guardado correctamente.</p>
+
+      <section class="panel profile-header" id="profile-header">
+        <div class="profile-avatar-wrap">
+          <img id="profile-avatar" class="avatar avatar-lg" alt="" />
+        </div>
+        <div class="profile-ident">
+          <h2 id="profile-display">…</h2>
+          <p class="muted">
+            <code id="profile-username">…</code> · <code id="profile-discord-id">…</code>
+          </p>
+          <p>
+            <span id="profile-status" class="badge">…</span>
+            <span class="muted" id="profile-nickname"></span>
+          </p>
+        </div>
+      </section>
+
+      <div class="detail-grid">
+        <section class="panel">
+          <header class="panel-header"><h2>Datos de Discord</h2></header>
+          <div class="kv">
+            <div><span class="k">Primera entrada</span><span class="v" id="k-first-join">—</span></div>
+            <div><span class="k">Última entrada</span><span class="v" id="k-last-join">—</span></div>
+            <div><span class="k">Última salida</span><span class="v" id="k-last-leave">—</span></div>
+            <div><span class="k">Ingresos totales</span><span class="v" id="k-joins">—</span></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <header class="panel-header"><h2>Datos editables</h2></header>
+          <form id="edit-form" class="form-grid">
+            <label>Nombre real
+              <input id="f-real-name" type="text" maxlength="120" />
+            </label>
+            <label>Edad
+              <input id="f-age" type="number" min="0" max="120" />
+            </label>
+            <label>País
+              <input id="f-country" type="text" maxlength="80" />
+            </label>
+            <label>Alias
+              <input id="f-alias" type="text" maxlength="80" placeholder="(opcional)" />
+            </label>
+            <label class="full">Observaciones
+              <textarea id="f-observations" rows="3" maxlength="2000"></textarea>
+            </label>
+            <label class="full">Notas internas
+              <textarea id="f-notes" rows="4" maxlength="4000"></textarea>
+            </label>
+            <p class="muted full" id="notes-meta" hidden></p>
+            <div class="full form-actions">
+              <button id="save-btn" type="submit" class="primary-btn">Guardar cambios</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel">
+        <header class="panel-header"><h2>Historial de ingresos y salidas</h2></header>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Tipo</th><th>Fecha y hora</th><th>Username (snapshot)</th><th>Nickname (snapshot)</th></tr>
+            </thead>
+            <tbody id="history-body">
+              <tr><td colspan="4" class="muted">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/member-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Manager — Panel</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <strong>Staff Manager</strong>
+    </div>
+    <nav class="nav">
+      <a class="nav-link active" href="./dashboard.html">Dashboard</a>
+      <a class="nav-link" href="./members.html">Miembros actuales</a>
+      <a class="nav-link" href="./inactive.html">Inactivos</a>
+      <a class="nav-link" href="./history.html">Historial</a>
+    </nav>
+    <div class="sidebar-footer muted">v0.1 · panel privado</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <span id="whoami" class="muted">…</span>
+        <span class="role-pill" id="staff-role">…</span>
+        <button id="theme-toggle" type="button" class="ghost-btn">🌙 Oscuro</button>
+        <button id="logout-btn" type="button" class="ghost-btn">Salir</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <p class="welcome">Bienvenido/a, <strong id="staff-name">…</strong>.</p>
+
+      <p id="dashboard-error" class="error" role="alert" hidden></p>
+
+      <section class="stats-grid" aria-label="Estadísticas">
+        <article class="stat-card">
+          <span class="stat-label">Miembros actuales</span>
+          <span class="stat-value" id="stat-active">—</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Ingresos hoy</span>
+          <span class="stat-value" id="stat-joins-today">—</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Salidas hoy</span>
+          <span class="stat-value" id="stat-leaves-today">—</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Total histórico</span>
+          <span class="stat-value" id="stat-total">—</span>
+        </article>
+      </section>
+
+      <section class="panel" aria-label="Actividad reciente">
+        <header class="panel-header">
+          <h2>Actividad reciente</h2>
+          <span class="muted">últimos 10 eventos</span>
+        </header>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Usuario</th>
+                <th>Discord ID</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="recent-activity-body">
+              <tr><td colspan="4" class="muted">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/dashboard.js"></script>
+</body>
+</html>

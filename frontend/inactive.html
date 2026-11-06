@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Manager — Miembros inactivos</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <strong>Staff Manager</strong>
+    </div>
+    <nav class="nav">
+      <a class="nav-link" href="./dashboard.html">Dashboard</a>
+      <a class="nav-link" href="./members.html">Miembros actuales</a>
+      <a class="nav-link active" href="./inactive.html">Inactivos</a>
+      <a class="nav-link" href="./history.html">Historial</a>
+    </nav>
+    <div class="sidebar-footer muted">v0.1 · panel privado</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left"><h1>Miembros inactivos</h1></div>
+      <div class="topbar-right">
+        <span id="whoami" class="muted">…</span>
+        <span class="role-pill" id="staff-role">…</span>
+        <button id="theme-toggle" type="button" class="ghost-btn">🌙 Oscuro</button>
+        <button id="logout-btn" type="button" class="ghost-btn">Salir</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <p id="inactive-error" class="error" role="alert" hidden></p>
+
+      <section class="panel">
+        <header class="panel-header panel-header-wrap">
+          <div class="filters">
+            <input id="search-input" type="search" placeholder="Buscar por username, nickname o Discord ID…" />
+            <select id="sort-select">
+              <option value="leave_desc">Última salida: más reciente</option>
+              <option value="leave_asc">Última salida: más antigua</option>
+              <option value="username_asc">Username: A → Z</option>
+              <option value="username_desc">Username: Z → A</option>
+            </select>
+          </div>
+          <span id="inactive-count" class="muted">—</span>
+        </header>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Nickname</th>
+                <th>Discord ID</th>
+                <th>Primera entrada</th>
+                <th>Última entrada</th>
+                <th>Última salida</th>
+                <th>Ingresos</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="inactive-body">
+              <tr><td colspan="9" class="muted">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/inactive.js"></script>
+</body>
+</html>

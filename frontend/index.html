@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Manager — Login</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <h1>Staff Manager</h1>
+    <p class="subtitle">Acceso exclusivo del staff</p>
+
+    <form id="login-form" autocomplete="on">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="tu@email.com" />
+
+      <label for="password">Contraseña</label>
+      <input id="password" name="password" type="password" required placeholder="••••••••" />
+
+      <button id="login-btn" type="submit">Entrar</button>
+      <p id="login-error" class="error" role="alert" hidden></p>
+    </form>
+  </main>
+
+  <script type="module">
+    import { signIn, redirectIfLoggedIn } from './js/auth.js';
+
+    // Si ya hay sesión, no mostrar el login.
+    redirectIfLoggedIn();
+
+    const form = document.getElementById('login-form');
+    const btn = document.getElementById('login-btn');
+    const errEl = document.getElementById('login-error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.hidden = true;
+      btn.disabled = true;
+      btn.textContent = 'Entrando…';
+
+      const email = form.email.value.trim();
+      const password = form.password.value;
+
+      try {
+        await signIn(email, password);
+        window.location.href = './dashboard.html';
+      } catch (err) {
+        errEl.textContent = 'Credenciales incorrectas o usuario no autorizado.';
+        errEl.hidden = false;
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+      }
+    });
+  </script>
+</body>
+</html>
