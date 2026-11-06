@@ -52,7 +52,7 @@ const state = {
 async function loadMembers() {
   const { data, error } = await supabase
     .from('members')
-    .select('id, discord_id, username, nickname, avatar_url, first_join_at, last_join_at, is_active')
+    .select('id, discord_id, username, nickname, avatar_url, first_join_at, last_join_at, is_active, characters(name, game)')
     .eq('is_active', true)
     .order('last_join_at', { ascending: false });
 
@@ -122,7 +122,12 @@ function render() {
         <td>${avatar}</td>
         <td>${escapeHtml(m.username)}</td>
         <td>${nickname}</td>
-        <td><code>${escapeHtml(m.discord_id)}</code></td>
+        <td>
+          ${m.characters
+            ? `<span class="char-name">${escapeHtml(m.characters.name)}</span>
+              <span class="char-game muted">${escapeHtml(m.characters.game)}</span>`
+            : '<span class="muted">—</span>'}
+        </td>
         <td>${fmtDate(m.last_join_at)}</td>
         <td><span class="badge badge-join">ACTIVO</span></td>
         <td><a class="link-btn" href="./member-detail.html?id=${encodeURIComponent(m.id)}">Ver ficha →</a></td>
@@ -144,6 +149,14 @@ function initControls() {
     state.sort = e.target.value;
     state.page = 1;
     applyFiltersAndRender();
+    if (q) {
+      list = list.filter((m) =>
+        (m.username ?? '').toLowerCase().includes(q) ||
+        (m.nickname ?? '').toLowerCase().includes(q) ||
+        (m.discord_id ?? '').toLowerCase().includes(q) ||
+        (m.characters?.name ?? '').toLowerCase().includes(q)
+      );
+    }
   });
   document.getElementById('prev-page')?.addEventListener('click', () => {
     if (state.page > 1) { state.page--; render(); }

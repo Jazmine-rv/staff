@@ -379,3 +379,15 @@ body {
   color: var(--muted);
   cursor: not-allowed;
 }
+
+/* ---------- 6.3: celda de personaje ---------- */
+.char-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.char-game {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
