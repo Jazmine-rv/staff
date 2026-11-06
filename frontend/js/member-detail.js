@@ -67,7 +67,7 @@ async function loadCharactersCatalog() {
     console.error(err);
     showError(err.message || 'No se pudo cargar la ficha.');
   }
-  
+
 // Personajes ocupados por miembros activos (excluyendo al miembro actual)
 async function getOccupiedCharacterIds(currentMemberId) {
   const { data, error } = await supabase
@@ -237,7 +237,7 @@ async function saveChanges(e) {
     alias: document.getElementById('f-alias').value.trim() || null,
     observations: document.getElementById('f-observations').value.trim() || null,
     internal_notes: document.getElementById('f-notes').value.trim() || null,
-    staff_notes_updated_by: currentSession?.user?.email ?? null,
+    staff_notes_updated_by: currentProfile?.display_name ?? currentSession?.user?.email ?? null,
     staff_notes_updated_at: new Date().toISOString(),
     character_id: characterId,
   };
