@@ -46,6 +46,86 @@ function showOk() {
   document.getElementById('detail-error').hidden = true;
   setTimeout(() => { ok.hidden = true; }, 2500);
 }
+// ---------- CATÁLOGO DE PERSONAJES ----------
+let charactersCatalog = []; // [{id, name, game}]
+
+async function loadCharactersCatalog() {
+  const { data, error } = await supabase
+    .from('characters')
+    .select('id, name, game')
+    .order('game', { ascending: true })
+    .order('name', { ascending: true });
+  if (error) throw error;
+  charactersCatalog = data ?? [];
+}
+
+  try {
+    await loadCharactersCatalog();
+    const member = await loadMember();
+    await loadHistory(member.discord_id);
+  } catch (err) {
+    console.error(err);
+    showError(err.message || 'No se pudo cargar la ficha.');
+  }
+  
+// Personajes ocupados por miembros activos (excluyendo al miembro actual)
+async function getOccupiedCharacterIds(currentMemberId) {
+  const { data, error } = await supabase
+    .from('members')
+    .select('character_id')
+    .eq('is_active', true)
+    .not('character_id', 'is', null)
+    .neq('id', currentMemberId);
+  if (error) throw error;
+  return new Set((data ?? []).map((r) => r.character_id));
+}
+
+// Rellena el <select> agrupado por juego, con los disponibles + el actual
+function populateCharacterSelect(availableIds, currentCharacterId, currentMemberId) {
+  const select = document.getElementById('f-character');
+  if (!select) return;
+
+  // Agrupar por juego
+  const byGame = new Map();
+  for (const c of charactersCatalog) {
+    if (!byGame.has(c.game)) byGame.set(c.game, []);
+    byGame.get(c.game).push(c);
+  }
+
+  // Limpiar manteniendo la opción vacía
+  select.innerHTML = '<option value="">— Sin personaje —</option>';
+
+  for (const [game, list] of [...byGame.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    const group = document.createElement('optgroup');
+    group.label = game;
+    for (const c of list) {
+      const isCurrent = c.id === currentCharacterId;
+      const isOccupied = availableIds.has(c.id);
+      if (isOccupied && !isCurrent) continue; // ocupado por otro activo
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name;
+      opt.dataset.game = c.game;
+      if (isCurrent) opt.selected = true;
+      group.appendChild(opt);
+    }
+    if (group.children.length > 0) select.appendChild(group);
+  }
+}
+
+// Autocompleta el juego al cambiar el personaje
+function bindCharacterGameAutofill() {
+  const select = document.getElementById('f-character');
+  const gameInput = document.getElementById('f-game');
+  if (!select || !gameInput) return;
+
+  const update = () => {
+    const opt = select.selectedOptions[0];
+    gameInput.value = opt?.dataset?.game ?? '';
+  };
+  select.addEventListener('change', update);
+  update(); // estado inicial
+}
 
 // ---------- CARGA ----------
 async function loadMember() {
@@ -57,7 +137,7 @@ async function loadMember() {
   if (error) throw error;
   if (!data) throw new Error('Miembro no encontrado');
 
-  // Cabecera
+  // --- Cabecera ---
   setText('profile-display', data.nickname || data.username || data.discord_id);
   setText('profile-username', data.username);
   setText('profile-discord-id', data.discord_id);
@@ -71,12 +151,12 @@ async function loadMember() {
   status.textContent = data.is_active ? 'ACTIVO' : 'INACTIVO';
   status.className = 'badge ' + (data.is_active ? 'badge-join' : 'badge-leave');
 
-  // Datos Discord
+  // --- Datos Discord ---
   setText('k-first-join', fmtDateTime(data.first_join_at));
   setText('k-last-join', fmtDateTime(data.last_join_at));
   setText('k-last-leave', fmtDateTime(data.last_leave_at));
 
-  // Formulario
+  // --- Formulario ---
   setVal('f-real-name', data.real_name);
   setVal('f-age', data.age);
   setVal('f-country', data.country);
@@ -84,11 +164,27 @@ async function loadMember() {
   setVal('f-observations', data.observations);
   setVal('f-notes', data.internal_notes);
 
+  // --- Meta de notas (5.5) ---
   if (data.staff_notes_updated_at) {
     const meta = document.getElementById('notes-meta');
     meta.hidden = false;
     meta.textContent = `Notas actualizadas por ${data.staff_notes_updated_by ?? '—'} el ${fmtDateTime(data.staff_notes_updated_at)}`;
   }
+
+  // --- Personaje (6.2) ---
+  if (data.character_id) {
+    const ch = charactersCatalog.find((c) => c.id === data.character_id);
+    if (ch) {
+      const pc = document.getElementById('profile-character');
+      pc.hidden = false;
+      pc.textContent = `Personaje: ${ch.name} — ${ch.game}`;
+    }
+  }
+
+  // Selector de personaje (6.2)
+  const occupied = await getOccupiedCharacterIds(data.id);
+  populateCharacterSelect(occupied, data.character_id, data.id);
+  bindCharacterGameAutofill();
 
   return data;
 }
@@ -131,6 +227,8 @@ async function saveChanges(e) {
   e.preventDefault();
   const btn = document.getElementById('save-btn');
   btn.disabled = true; btn.textContent = 'Guardando…';
+  const characterId = document.getElementById('f-character').value || null;
+
 
   const updates = {
     real_name: document.getElementById('f-real-name').value.trim() || null,
@@ -141,6 +239,7 @@ async function saveChanges(e) {
     internal_notes: document.getElementById('f-notes').value.trim() || null,
     staff_notes_updated_by: currentSession?.user?.email ?? null,
     staff_notes_updated_at: new Date().toISOString(),
+    character_id: characterId,
   };
 
   try {
@@ -150,9 +249,12 @@ async function saveChanges(e) {
     const meta = document.getElementById('notes-meta');
     meta.hidden = false;
     meta.textContent = `Notas actualizadas por ${updates.staff_notes_updated_by ?? '—'} el ${fmtDateTime(updates.staff_notes_updated_at)}`;
-  } catch (err) {
+    } catch (err) {
     console.error(err);
-    showError('No se pudo guardar. Revisá RLS y la consola.');
+    const msg = err?.message?.includes('Solo un administrador')
+      ? 'Solo un administrador puede asignar o cambiar personajes.'
+      : 'No se pudo guardar. Revisá RLS y la consola.';
+    showError(msg);
   } finally {
     btn.disabled = false; btn.textContent = 'Guardar cambios';
   }
@@ -179,7 +281,7 @@ function initLogout() {
   try {
     currentProfile = await getStaffProfile();
     setText('staff-role', currentProfile?.role ?? 'sin rol');
-    setText('whoami', currentProfile?.display_name ?? currentSession.user.email);
+    setText('whoami', currentSession.user.email);
   } catch (err) { console.error(err); }
 
   try {

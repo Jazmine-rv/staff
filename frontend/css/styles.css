@@ -359,3 +359,23 @@ body {
   .detail-grid { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- 6.2: selector de personaje ---------- */
+.character-select {
+  padding: 9px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  outline: none;
+  max-width: 100%;
+}
+.character-select:focus { border-color: var(--accent); }
+
+#f-game[readonly] {
+  background: var(--surface);
+  color: var(--muted);
+  cursor: not-allowed;
+}
