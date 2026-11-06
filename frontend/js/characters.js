@@ -175,6 +175,53 @@ async function handleAdd(e) {
   }
 }
 
+// ---------- EXPORTAR TXT ----------
+function exportFreeCharactersTxt() {
+  // Solo los libres, agrupados por juego
+  const free = state.all.filter((c) => !state.occupied.has(c.id));
+
+  if (free.length === 0) {
+    showError('No hay personajes libres para exportar.');
+    return;
+  }
+
+  const order = [
+    'Genshin Impact',
+    'Honkai Star Rail',
+    'Honkai Impact 3rd',
+    'Zenless Zone Zero',
+    'Wuthering Waves',
+  ];
+
+  const byGame = new Map();
+  for (const c of free) {
+    if (!byGame.has(c.game)) byGame.set(c.game, []);
+    byGame.get(c.game).push(c.name);
+  }
+
+  const lines = [];
+  for (const game of order) {
+    const names = byGame.get(game);
+    if (!names || names.length === 0) continue;
+    names.sort((a, b) => a.localeCompare(b, 'es'));
+    lines.push(`**${game}** (${names.length} libres)`);
+    for (const n of names) lines.push(n);
+    lines.push(''); // línea en blanco entre juegos
+  }
+
+  const txt = lines.join('\n').trimEnd() + '\n';
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `personajes-libres-${new Date().toISOString().slice(0, 10)}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  showOk();
+}
 // ---------- UI ----------
 function initControls() {
   document.getElementById('search-input')?.addEventListener('input', (e) => {
@@ -184,6 +231,7 @@ function initControls() {
     state.game = e.target.value; applyFilters();
   });
   document.getElementById('add-character-form')?.addEventListener('submit', handleAdd);
+  document.getElementById('export-btn')?.addEventListener('click', exportFreeCharactersTxt);
 }
 function initLogout() {
   document.getElementById('logout-btn')?.addEventListener('click', async () => {
