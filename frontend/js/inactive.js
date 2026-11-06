@@ -145,7 +145,7 @@ function initLogout() {
   try {
     const profile = await getStaffProfile();
     setText('staff-role', profile?.role ?? 'sin rol');
-    setText('whoami', session.user.email);
+    setText('whoami', profile?.display_name ?? session.user.email);
   } catch (err) { console.error(err); }
   try { await loadInactive(); }
   catch (err) { console.error(err); showError('No se pudieron cargar los inactivos.'); }

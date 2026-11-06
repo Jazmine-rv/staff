@@ -186,7 +186,7 @@ window.addEventListener('beforeunload', () => {
   try {
     const profile = await getStaffProfile();
     setText('staff-role', profile?.role ?? 'sin rol');
-    setText('whoami', session.user.email);
+    setText('whoami', profile?.display_name ?? session.user.email);
   } catch (err) {
     console.error(err);
   }

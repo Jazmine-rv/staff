@@ -179,7 +179,7 @@ function initLogout() {
   try {
     currentProfile = await getStaffProfile();
     setText('staff-role', currentProfile?.role ?? 'sin rol');
-    setText('whoami', currentSession.user.email);
+    setText('whoami', currentProfile?.display_name ?? currentSession.user.email);
   } catch (err) { console.error(err); }
 
   try {
