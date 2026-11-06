@@ -391,3 +391,8 @@ body {
   font-size: 0.75rem;
   margin-top: 2px;
 }
+
+/* ---------- 6.4: gestión de personajes ---------- */
+.ghost-btn.small { padding: 5px 9px; font-size: 0.78rem; }
+.ghost-btn.danger { color: var(--danger); border-color: rgba(255,92,92,0.3); }
+.ghost-btn.danger:hover { border-color: var(--danger); }
