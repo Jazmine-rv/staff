@@ -405,3 +405,65 @@ body {
   gap: 12px;
   flex-wrap: wrap;
 }
+
+/* ---------- Selector de modo (index) ---------- */
+.mode-card { max-width: 460px; }
+.mode-options { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+
+.mode-btn {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 18px; text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+}
+.mode-btn:hover { border-color: var(--accent); }
+.mode-btn-guest { border-style: dashed; }
+.mode-title { font-weight: 700; font-size: 1rem; }
+.mode-desc { font-size: 0.85rem; }
+
+.back-inline {
+  background: transparent; border: 0; color: var(--muted);
+  cursor: pointer; font-size: 0.85rem; padding: 0 0 12px;
+}
+.back-inline:hover { color: var(--text); }
+
+/* ---------- Página pública de personajes ---------- */
+.public-page { max-width: 1000px; margin: 0 auto; padding: 24px 20px 60px; }
+.public-header .back-link { display: inline-block; margin-bottom: 12px; }
+.public-header h1 { margin: 0 0 4px; }
+.public-header p { margin: 0 0 24px; }
+
+.public-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.public-filters input[type="search"] {
+  flex: 1; min-width: 220px; padding: 9px 12px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none;
+}
+.public-filters input[type="search"]:focus { border-color: var(--accent); }
+.public-filters select {
+  padding: 9px 12px; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-size: 0.9rem; cursor: pointer;
+}
+
+.public-group {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.public-group h2 { margin: 0 0 12px; font-size: 1.05rem; }
+
+.public-list {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 18px; font-size: 0.92rem;
+}
+.public-list li {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border);
+}

@@ -1,23 +1,35 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Staff Manager — Login</title>
+  <title>Staff Manager</title>
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body class="auth-page">
-  <main class="auth-card">
+  <main class="auth-card mode-card">
     <h1>Staff Manager</h1>
-    <p class="subtitle">Acceso exclusivo del staff</p>
+    <p class="subtitle">Elegí cómo querés entrar</p>
 
-    <form id="login-form" autocomplete="on">
+    <div class="mode-options">
+      <button id="staff-mode-btn" type="button" class="mode-btn">
+        <span class="mode-title">Entrar como staff</span>
+        <span class="mode-desc muted">Acceso con email y contraseña al panel completo</span>
+      </button>
+      <a href="./characters-public.html" class="mode-btn mode-btn-guest">
+        <span class="mode-title">Entrar como invitado</span>
+        <span class="mode-desc muted">Ver la lista de personajes disponibles</span>
+      </a>
+    </div>
+
+    <!-- Formulario de login, oculto hasta pulsar "Entrar como staff" -->
+    <form id="login-form" autocomplete="on" hidden>
+      <button id="back-btn" type="button" class="back-inline">← Volver</button>
       <label for="email">Email</label>
       <input id="email" name="email" type="email" required placeholder="tu@email.com" />
-
       <label for="password">Contraseña</label>
       <input id="password" name="password" type="password" required placeholder="••••••••" />
-
       <button id="login-btn" type="submit">Entrar</button>
       <p id="login-error" class="error" role="alert" hidden></p>
     </form>
@@ -26,21 +38,36 @@
   <script type="module">
     import { signIn, redirectIfLoggedIn } from './js/auth.js';
 
-    // Si ya hay sesión, no mostrar el login.
+    // Si ya hay sesión de staff, ir directo al dashboard
     redirectIfLoggedIn();
 
-    const form = document.getElementById('login-form');
-    const btn = document.getElementById('login-btn');
+    const modeOptions = document.querySelector('.mode-options');
+    const loginForm = document.getElementById('login-form');
+    const staffBtn = document.getElementById('staff-mode-btn');
+    const backBtn = document.getElementById('back-btn');
     const errEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
 
-    form.addEventListener('submit', async (e) => {
+    staffBtn.addEventListener('click', () => {
+      modeOptions.hidden = true;
+      loginForm.hidden = false;
+      document.getElementById('email').focus();
+    });
+
+    backBtn.addEventListener('click', () => {
+      loginForm.hidden = true;
+      modeOptions.hidden = false;
+      errEl.hidden = true;
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       errEl.hidden = true;
       btn.disabled = true;
       btn.textContent = 'Entrando…';
 
-      const email = form.email.value.trim();
-      const password = form.password.value;
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
 
       try {
         await signIn(email, password);

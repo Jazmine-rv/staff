@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Personajes — Staff Manager</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="public-page">
+  <header class="public-header">
+    <a href="./index.html" class="back-link">← Volver</a>
+    <h1>Personajes</h1>
+    <p class="muted">Disponibilidad actualizada. Libre = se puede elegir. Ocupado = ya tiene dueño.</p>
+  </header>
+
+  <main class="public-content">
+    <div class="filters public-filters">
+      <input id="search-input" type="search" placeholder="Buscar personaje…" />
+      <select id="game-filter">
+        <option value="">Todos los juegos</option>
+        <option value="Genshin Impact">Genshin Impact</option>
+        <option value="Honkai Star Rail">Honkai Star Rail</option>
+        <option value="Honkai Impact 3rd">Honkai Impact 3rd</option>
+        <option value="Zenless Zone Zero">Zenless Zone Zero</option>
+        <option value="Wuthering Waves">Wuthering Waves</option>
+      </select>
+    </div>
+
+    <p id="pub-count" class="muted">Cargando…</p>
+    <div id="pub-groups"></div>
+    <p id="pub-error" class="error" role="alert" hidden></p>
+  </main>
+
+  <script type="module" src="./js/characters-public.js"></script>
+</body>
+</html>
